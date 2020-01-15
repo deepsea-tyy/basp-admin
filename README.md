@@ -1,16 +1,15 @@
-# tyy-admin
+# basp-admin
 
 
 ## 简介
-modularity saas后台管理
-[vue-element-admin](https://panjiachen.github.io/vue-element-admin) + [modularity saas](https://github.com/deepsea-tyy/tyy-saas)
+后台管理
 
 ## 开发
 
 ```bash
 
 # 进入项目目录
-cd tyy-admin
+cd basp-admin
 
 # 安装依赖
 npm install

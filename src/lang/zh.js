@@ -68,7 +68,7 @@ export default {
     Promotion: '促销管理',
     CouponManage: '优惠券管理',
     CouponIndex: '优惠券列表',
-    CouponEdit: '编辑优惠券'
+    PromotionIndex: '促销券列表'
   },
   navbar: {
     dashboard: '首页',

@@ -20,7 +20,7 @@ export function del(data) {
   return request({
     url: `/promotion/promotion/delete`,
     method: 'post',
-    data
+    params: data
   })
 }
 

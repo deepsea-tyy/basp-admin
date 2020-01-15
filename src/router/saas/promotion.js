@@ -23,30 +23,23 @@ const promotionRouter = {
           name: 'coupon-index',
           component: () => import('@/views/promotion/coupon/index'),
           meta: { title: 'CouponIndex' }
-        },
-        {
-          path: 'edit',
-          name: 'coupon-edit',
-          hidden: true,
-          component: () => import('@/views/promotion/coupon/edit'),
-          meta: { title: 'CouponEdit' }
         }
       ]
-    }/*,
+    },
     {
-      path: 'edit',
-      name: 'edit-manage',
+      path: 'promotion',
+      name: 'promotion-manage',
       component: () => import('@/views/promotion/components/layout'),
-      meta: { title: 'EditManage' },
+      meta: { title: 'PromotionManage' },
       children: [
         {
-          path: 'index',
-          name: 'edit-index',
-          component: () => import('@/views/promotion/coupon/index'),
-          meta: { title: 'EditIndex' }
-        },
+          path: 'edit',
+          name: 'promotion-index',
+          component: () => import('@/views/promotion/promotion/index'),
+          meta: { title: 'PromotionIndex' }
+        }
       ]
-    }*/
+    }
   ]
 }
 
