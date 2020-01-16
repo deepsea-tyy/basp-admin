@@ -29,11 +29,6 @@
           <GridColumn field="code" title="调用代码" align="center"  width="150"/>
           <GridColumn field="status" title="状态" align="center"  width="150"/>
           <GridColumn field="exclusion" title="排他" align="center"  width="150"/>
-          <GridColumn field="type" title="类型" align="center"  width="150">
-            <template slot="body" slot-scope="scope">
-              {{scope.row.type}}
-            </template>
-          </GridColumn>
 
           <GridColumn field="created_at" title="添加时间" align="center" width="150">
             <template slot="body" slot-scope="scope">
@@ -79,9 +74,12 @@
         <FormField name="scene" label="使用场景:">
           <ComboBox v-model="model.scene" :data="scene" />
         </FormField>
-        <FormField name="type" label="促销类型:">
-          <ComboBox v-model="model.type" :data="type" />
+        <FormField name="exclusion" label="排它:">
+          <ComboBox v-model="model.exclusion" :data="exclusion" />
         </FormField>
+        <!-- <FormField name="type" label="促销类型:">
+          <ComboBox v-model="model.type" :data="type" />
+        </FormField> -->
         <FormField name="status" label="领取方式:">
           <ComboBox v-model="model.status" :data="status" />
         </FormField>
@@ -150,6 +148,10 @@ export default {
         { value: 1, text: '默认' },
         { value: 2, text: '其他' },
       ],
+      exclusion:[
+        { value: 1, text: '是' },
+        { value: 2, text: '否' },
+      ],
       condition_type:[
         { value: 1, text: '全部商品' },
         { value: 2, text: '商品分类' },
@@ -177,10 +179,6 @@ export default {
     }
   },
   watch: {
-    'datePicker': function() {
-      this.model.start_at = this.datePicker[0]
-      this.model.end_at = this.datePicker[1]
-    },
     'model.conditions.condition_type': function(val, oldval) {
       if (val == 2 || val == 3) {
         this.condition_desc = "商品数量需大于此设置"
@@ -200,8 +198,9 @@ export default {
         num: null,
         receive_num: null,
         scene: null,
-        type: null,
+        type: 1,
         code: null,
+        exclusion: null,
         start_at: null,
         end_at: null,
         conditions: {
@@ -240,9 +239,6 @@ export default {
       this.rowClicked = true;
       this.$nextTick(() => (this.rowClicked = false));
     },
-    onQuery() {
-      this.pagingData()
-    },
     onPageChange(event) {
       this.queryParam.page = event.pageNumber
       this.pagingData()
@@ -250,6 +246,8 @@ export default {
     verificationRow() {
       this.$refs.form.validate(errors => {
         if (!errors) {
+          this.model.start_at = this.datePicker[0]
+          this.model.end_at = this.datePicker[1]
           this.saveData(this.model)
         }
       })
@@ -261,8 +259,8 @@ export default {
       this.dialogVisible = true
     },
     updateRow(row) {
+      this.viewData(row)
       this.editingModel = row;
-      this.model = Object.assign({}, row);
       this.dialogType = 'edit';
       this.dialogVisible = true
     },
@@ -299,6 +297,14 @@ export default {
         type: 'success',
         message: '删除成功!'
       })
+    },
+    async viewData(data) {
+      const res =  await apiPromotion.view(data)
+      this.model = res.data;
+      this.datePicker = [
+        res.data.start_at * 1000,
+        res.data.end_at * 1000
+      ]
     }
   }
 }

@@ -25,15 +25,17 @@
       <GridColumnGroup>
         <GridHeaderRow>
           <GridColumn field="name" title="名称" align="center"  width="150"/>
+
+          <GridColumn field="type" title="类型" align="center"  width="150">
+            <template slot="body" slot-scope="scope">
+              {{getDesc(type,scope.row.type)}}
+            </template>
+          </GridColumn>
+
           <GridColumn field="receive_num" title="可领次数" align="center"  width="150"/>
           <GridColumn field="code" title="调用代码" align="center"  width="150"/>
           <GridColumn field="status" title="状态" align="center"  width="150"/>
           <GridColumn field="exclusion" title="排他" align="center"  width="150"/>
-          <GridColumn field="type" title="类型" align="center"  width="150">
-            <template slot="body" slot-scope="scope">
-              {{scope.row.type}}
-            </template>
-          </GridColumn>
 
           <GridColumn field="created_at" title="添加时间" align="center" width="150">
             <template slot="body" slot-scope="scope">
@@ -68,28 +70,39 @@
           <TextBox name="name" v-model="model.name"></TextBox>
         </FormField>
         <FormField name="num" label="促销数量:">
-          <TextBox name="num" v-model="model.num"></TextBox>
+          <NumberBox name="num" v-model="model.num"></NumberBox>
         </FormField>
         <FormField name="receive_num" label="领取次数:">
-          <TextBox name="receive_num" v-model="model.receive_num"></TextBox>
-        </FormField>
-        <FormField name="scene" label="使用场景:">
-          <TextBox name="scene" v-model="model.scene"></TextBox>
-        </FormField>
-        <FormField name="type" label="1优惠券2促销3团购4秒杀:">
-          <TextBox name="type" v-model="model.type"></TextBox>
+          <NumberBox name="receive_num" v-model="model.receive_num"></NumberBox>
         </FormField>
         <FormField name="code" label="调用代码:">
           <TextBox name="code" v-model="model.code"></TextBox>
         </FormField>
-        <FormField name="start_time" label="开始时间:">
-          <TextBox name="start_time" v-model="model.start_time"></TextBox>
+        <FormField name="scene" label="使用场景:">
+          <ComboBox v-model="model.scene" :data="scene" />
         </FormField>
-        <FormField name="end_time" label="结束时间:">
-          <TextBox name="end_time" v-model="model.end_time"></TextBox>
+        <FormField name="exclusion" label="排它:">
+          <ComboBox v-model="model.exclusion" :data="exclusion" />
+        </FormField>
+        <FormField name="type" label="促销类型:">
+          <ComboBox v-model="model.type" :data="type" />
         </FormField>
         <FormField name="status" label="领取方式:">
-          <TextBox name="status" v-model="model.status"></TextBox>
+          <ComboBox v-model="model.status" :data="status" />
+        </FormField>
+        <FormField name="advert_time" label="有效时间:">
+          <el-date-picker v-model="datePicker" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="timestamp" />
+        </FormField>
+
+        <FormField name="content" label="条件:">
+          <ComboBox v-model="model.conditions.condition_type" :data="condition_type" />
+          <TextBox v-if="model.conditions.condition_type && model.conditions.condition_type!=1" v-model="model.conditions.condition" :placeholder="condition_desc"></TextBox>
+          <TextBox v-if="model.conditions.condition_type && (model.conditions.condition_type==2 || model.conditions.condition_type==3)" v-model="model.conditions.content" :placeholder="content_desc"></TextBox>
+        </FormField>
+
+        <FormField name="result" label="结果:">
+          <ComboBox v-model="model.conditions.result_type" :data="result_type" />
+          <TextBox  v-model="model.conditions.result"></TextBox>
         </FormField>
 
         <FormField>
@@ -106,31 +119,82 @@ import * as apiPromotion from '@/api/promotion/promotion'
 export default {
   data() {
     return {
+      datePicker: [],
       total: 0,
       tableList: [],
       loading: false,
       queryParam: {
         page: 1,
         pageSize: 20,
-        type: 1
       },
       allChecked: false,
       rowClicked: false,
       dialogVisible: false,
       dialogType: '',
       errors: {},
-      model: {},
+      model: {
+        conditions:{
+          type:null
+        }
+      },
       rules: {
         name: 'required'
       },
+      status:[
+        { value: 1, text: '默认' },
+        { value: 2, text: '可直接领取' },
+      ],
+      type:[
+        { value: 1, text: '优惠券' },
+        { value: 2, text: '促销' },
+        { value: 3, text: '团购' },
+        { value: 4, text: '秒杀' },
+      ],
+      scene:[
+        { value: 1, text: '默认' },
+        { value: 2, text: '其他' },
+      ],
+      exclusion:[
+        { value: 1, text: '是' },
+        { value: 2, text: '否' },
+      ],
+      condition_type:[
+        { value: 1, text: '全部商品' },
+        { value: 2, text: '商品分类' },
+        { value: 3, text: '指定商品' },
+        { value: 4, text: '订单满减' },
+      ],
+      result_type:[
+        { value: 1, text: '商品减固定金额' },
+        { value: 2, text: '商品折扣' },
+        { value: 3, text: '商品一口价' },
+        { value: 4, text: '订单减固定金额' },
+        { value: 5, text: '订单折扣' },
+        { value: 6, text: '订单一口价' },
+      ],
+      condition_desc:null,
+      content_desc:null
     }
   },
   created() {
-    this.pagingData(this.queryParam)
+    this.pagingData()
   },
   computed: {
     checkedRows() {
       return this.tableList.filter(row => row.selected);
+    }
+  },
+  watch: {
+    'model.conditions.condition_type': function(val, oldval) {
+      if (val == 2 || val == 3) {
+        this.condition_desc = "商品数量需大于此设置"
+        this.content_desc = val == 2 ? "商品分类id" : "商品id"
+      }else if (val == 4) {
+        this.condition_desc = "订单金额需大于此设置"
+      }else{
+        this.condition_desc = ""
+      }
+      console.log(val,oldval)
     }
   },
   methods: {
@@ -142,8 +206,16 @@ export default {
         scene: null,
         type: null,
         code: null,
-        start_time: null,
-        end_time: null,
+        exclusion: null,
+        start_at: null,
+        end_at: null,
+        conditions: {
+          condition_type: null,
+          condition: null,
+          content: null,
+          result_type: null,
+          result: null,
+        }
       }
     },
     batchDelete(){
@@ -173,15 +245,18 @@ export default {
       this.rowClicked = true;
       this.$nextTick(() => (this.rowClicked = false));
     },
-    onQuery() {
-      this.pagingData(this.queryParam)
-    },
     onPageChange(event) {
       this.queryParam.page = event.pageNumber
-      this.pagingData(this.queryParam)
+      this.pagingData()
     },
     verificationRow() {
-
+      this.$refs.form.validate(errors => {
+        if (!errors) {
+          this.model.start_at = this.datePicker[0]
+          this.model.end_at = this.datePicker[1]
+          this.saveData(this.model)
+        }
+      })
     },
     createRow() {
       this.initModel()
@@ -190,8 +265,8 @@ export default {
       this.dialogVisible = true
     },
     updateRow(row) {
+      this.viewData(row)
       this.editingModel = row;
-      this.model = Object.assign({}, row);
       this.dialogType = 'edit';
       this.dialogVisible = true
     },
@@ -204,27 +279,47 @@ export default {
         this.deleteData(row)
       })
     },
-    async pagingData(param) {
+    async pagingData() {
       this.loading = true
-      let res = await apiPromotion.getList(param)
+      let res = await apiPromotion.getList(this.queryParam)
       this.total = res.data.totalCount
       this.tableList = res.data.list
       this.loading = false
     },
-    async saveData(data, type = 1) {
-      if (type == 1) {
+    async saveData(data) {
+      if (this.dialogType == 'edit') {
         await apiPromotion.update(data)
       } else {
         await apiPromotion.add(data)
       }
+
+      this.dialogVisible = false
+      this.pagingData()
     },
     async deleteData(data) {
       await apiPromotion.del(data)
-      this.pagingData(this.pageNumber, this.pageSize)
+      this.pagingData()
       this.$message({
         type: 'success',
         message: '删除成功!'
       })
+    },
+    async viewData(data) {
+      const res =  await apiPromotion.view(data)
+      this.model = res.data;
+      this.datePicker = [
+        res.data.start_at * 1000,
+        res.data.end_at * 1000
+      ]
+    },
+    getDesc($data,$value){
+      let text = "";
+      $data.forEach((item) => {
+        if (item.value == $value) {
+          text = item.text
+        }
+      })
+      return text
     }
   }
 }
