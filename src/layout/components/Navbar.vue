@@ -33,7 +33,7 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/deepsea-tyy/tyy-saas">
+          <a target="_blank" href="https://github.com/deepsea-tyy/basp-admin">
             <el-dropdown-item>
               {{ $t('navbar.github') }}
             </el-dropdown-item>

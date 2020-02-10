@@ -46,44 +46,55 @@
       </div>
       <div class="text item">
         <el-row :gutter="20">
-          <el-col :span="6">收货时间：{{model.id}}</el-col>
+          <el-col :span="6">收货时间：{{model.confirm_at}}</el-col>
           <el-col :span="6">收货人姓名：{{model.order_amount}}</el-col>
-          <el-col :span="6">收货人电话：{{tip.status[model.status]}}</el-col>
-          <el-col :span="6">收货地址：</el-col>
+          <el-col :span="6">收货人电话：{{model.ship_name}}</el-col>
+          <el-col :span="6">收货地址：{{model.ship_address}}</el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="6">买家备注：{{model.id}}</el-col>
+          <el-col :span="6">买家备注：{{model.memo}}</el-col>
         </el-row>
       </div>
     </el-card>
+
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>长期服务信息</span>
+      </div>
+      <div class="text item">
+        <el-row :gutter="20">
+          <el-col :span="6">服务地址</el-col>
+          <el-col :span="6">服务时间</el-col>
+          <el-col :span="6">状态</el-col>
+          <el-col :span="6">操作</el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6">{{model.ship_address}}</el-col>
+          <el-col :span="6">{{model.ext.appointment}}</el-col>
+          <el-col :span="6">{{model.ext.status}}</el-col>
+          <el-col :span="6"></el-col>
+        </el-row>
+      </div>
+    </el-card>
+
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>商品信息</span>
       </div>
       <div class="text item">
         <el-table :data="model.items">
-          <el-table-column prop="gn" label="商品编码">
-          </el-table-column>
-          <el-table-column prop="pn" label="单品编码">
-          </el-table-column>
-          <el-table-column prop="name" label="商品名称">
-          </el-table-column>
-          <el-table-column prop="price" label="商品单价">
-          </el-table-column>
-          <el-table-column prop="num" label="购买数量">
-          </el-table-column>
-          <el-table-column prop="amount" label="商品总价">
-          </el-table-column>
-          <el-table-column prop="weight" label="总重量">
-          </el-table-column>
-          <el-table-column prop="volume" label="总体积">
-          </el-table-column>
-          <el-table-column prop="delivery_num" label="发货数量">
-          </el-table-column>
+          <el-table-column prop="pn" label="单品编码"></el-table-column>
+          <el-table-column prop="name" label="商品名称"></el-table-column>
+          <el-table-column prop="price" label="商品单价"></el-table-column>
+          <el-table-column prop="num" label="购买数量"></el-table-column>
+          <el-table-column prop="amount" label="商品总价"></el-table-column>
+          <el-table-column prop="weight" label="总重量"></el-table-column>
+          <el-table-column prop="volume" label="总体积"></el-table-column>
+          <el-table-column prop="delivery_num" label="发货数量"></el-table-column>
         </el-table>
       </div>
     </el-card>
-    <el-card class="box-card">
+    <!-- <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>支付单/退款单</span>
       </div>
@@ -171,8 +182,8 @@
           </el-table-column>
         </el-table>
       </div>
-    </el-card>
-    <el-card class="box-card">
+    </el-card> -->
+   <!--  <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>订单记录</span>
       </div>
@@ -188,24 +199,7 @@
           </el-table-column>
         </el-table>
       </div>
-    </el-card>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>长期服务信息</span>
-      </div>
-      <div class="text item">
-        <el-table :data="model.items">
-          <el-table-column prop="gn" label="服务地址">
-          </el-table-column>
-          <el-table-column prop="pn" label="服务时间">
-          </el-table-column>
-          <el-table-column prop="name" label="状态">
-          </el-table-column>
-          <el-table-column prop="price" label="操作">
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-card>
+    </el-card> -->
     <!-- f-inline-row -->
     <!-- <Form ref="form" :model="model" :rules="rules" style="padding:20px 20px" @validate="errors=$event">
       <FormField name="id" label="订单号:" class="f-full">

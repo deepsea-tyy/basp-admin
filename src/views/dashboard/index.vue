@@ -7,7 +7,7 @@
       </div>
       <div class="text item">
         <el-row :gutter="20">
-          <el-col :span="24"><a href="https://github.com/deepsea-tyy/bricksasp" target="_black">项目开源地址: https://github.com/deepsea-tyy/bricksasp</a></el-col>
+          <el-col :span="24"><a href="https://github.com/deepsea-tyy/basp-admin" target="_black">项目开源地址: https://github.com/deepsea-tyy/basp-admin</a></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="24">作者：tyy</el-col>
