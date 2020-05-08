@@ -76,12 +76,9 @@
               <template slot="body" slot-scope="scope">
                 <ButtonGroup style="height:24px">
                   <LinkButton>
-                    <router-link :to="{ path: 'view', query: { id: scope.row.id }}"><i class="el-icon-view" /></router-link>
+                    <router-link :to="{ path: 'view', query: { id: scope.row.id }}"><i class="el-icon-edit-outline" /></router-link>
                   </LinkButton>
                   <LinkButton @click="payRow(scope.row)">支付</LinkButton>
-                  <LinkButton>
-                    <router-link :to="{ path: 'edit', query: { id: scope.row.id }}"><i class="el-icon-edit-outline" /></router-link>
-                  </LinkButton>
                   <LinkButton @click="cancelRow(scope.row)">取消</LinkButton>
                   <LinkButton @click="deleteRow(scope.row)"><i class="el-icon-delete" /></LinkButton>
                 </ButtonGroup>

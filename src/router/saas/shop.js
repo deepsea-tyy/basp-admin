@@ -41,13 +41,6 @@ const shopRouter = {
           meta: { title: 'OrderIndex' }
         },
         {
-          path: 'edit',
-          name: 'order-edit',
-          hidden: true,
-          component: () => import('@/views/shop/order/edit'),
-          meta: { title: 'OrderEdit' }
-        },
-        {
           path: 'view',
           name: 'order-view',
           hidden: true,

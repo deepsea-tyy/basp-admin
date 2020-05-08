@@ -1,99 +1,153 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>基本信息</span>
-      </div>
-      <div class="text item">
-        <el-row :gutter="20">
-          <el-col :span="6">订单号：{{model.id}}</el-col>
-          <el-col :span="6">单总金额：{{model.order_amount}}</el-col>
-          <el-col :span="6">订单状态：{{tip.status[model.status]}}</el-col>
-          <el-col :span="6">支付状态：{{tip.pay_status[model.pay_status]}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">发货状态：{{tip.ship_status[model.ship_status]}}</el-col>
-          <el-col :span="6">已支付金额：{{model.payed}}</el-col>
-          <el-col :span="6">支付方式：{{tip.payment_code[model.payment_code]}}</el-col>
-          <el-col :span="6">配送方式：{{model.logistics_name}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">发票类型：{{tip.tax_type[model.tax_type]}}</el-col>
-          <el-col :span="6">发票内容：{{model.tax_content}}</el-col>
-          <el-col :span="6">税号：{{model.tax_code}}</el-col>
-          <el-col :span="6">发票抬头：{{model.tax_title}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">订单优惠金额：{{model.order_pmt}}</el-col>
-          <el-col :span="6">商品优惠金额：{{model.goods_pmt}}</el-col>
-          <el-col :span="6">优惠券优惠：{{model.coupon_pmt}}</el-col>
-          <el-col :span="6">积分优惠：{{model.point_money}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">商品总重量：{{model.total_volume}}</el-col>
-          <el-col :span="6">商品总价：{{model.total_volume}}</el-col>
-          <el-col :span="6">下单时间：{{model.created_at}}</el-col>
-          <el-col :span="6">配送费用：{{model.cost_freight}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">收货状态：{{tip.confirm[model.confirm]}}</el-col>
-        </el-row>
-      </div>
-    </el-card>
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>收货人信息</span>
-      </div>
-      <div class="text item">
-        <el-row :gutter="20">
-          <el-col :span="6">收货时间：{{model.confirm_at}}</el-col>
-          <el-col :span="6">收货人姓名：{{model.order_amount}}</el-col>
-          <el-col :span="6">收货人电话：{{model.ship_name}}</el-col>
-          <el-col :span="6">收货地址：{{model.ship_address}}</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">买家备注：{{model.memo}}</el-col>
-        </el-row>
-      </div>
-    </el-card>
+    <!-- f-inline-row -->
+    <Form ref="form" :model="model" style="padding:20px 20px" @validate="errors=$event">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>基本信息</span>
+        </div>
+        <div class="text item">
+          <el-row :gutter="20">
+            <el-col :span="6">订单号：{{model.id}}</el-col>
+            <el-col :span="6">订单总金额：{{model.order_amount}}</el-col>
+            <el-col :span="6">订单状态：{{tip.status[model.status]}}</el-col>
+            <el-col :span="6">支付状态：{{tip.pay_status[model.pay_status]}}</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">发货状态：{{tip.ship_status[model.ship_status]}}</el-col>
+            <el-col :span="6">已支付金额：{{model.payed}}</el-col>
+            <el-col :span="6">支付方式：{{tip.payment_code[model.payment_code]}}</el-col>
+            <el-col :span="6">配送方式：{{model.logistics_name}}</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">发票类型：{{tip.tax_type[model.tax_type]}}</el-col>
+            <el-col :span="6">发票内容：{{model.tax_content}}</el-col>
+            <el-col :span="6">税号：{{model.tax_code}}</el-col>
+            <el-col :span="6">发票抬头：{{model.tax_title}}</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">订单优惠金额：{{model.order_pmt}}</el-col>
+            <el-col :span="6">商品优惠金额：{{model.goods_pmt}}</el-col>
+            <el-col :span="6">优惠券优惠：{{model.coupon_pmt}}</el-col>
+            <el-col :span="6">积分优惠：{{model.point_money}}</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">商品总重量：{{model.total_volume}}</el-col>
+            <el-col :span="6">商品总价：{{model.total_volume}}</el-col>
+            <el-col :span="6">下单时间：{{model.created_at}}</el-col>
+            <el-col :span="6">配送费用：{{model.cost_freight}}</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">收货状态：{{tip.confirm[model.confirm]}}</el-col>
+            <el-col :span="12">
+              <FormField name="pay_amount" label="实付金额：" class="f-inline-row">
+                <TextBox v-model="model.pay_amount" name="pay_amount"/>
+              </FormField>
+            </el-col>
+          </el-row>
+        </div>
+      </el-card>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>收货人信息</span>
+        </div>
+        <div class="text item">
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <FormField name="confirm_at" label="收货时间：" class="f-inline-row">
+                <TextBox v-model="model.confirm_at" name="confirm_at"/>
+              </FormField>
+            </el-col>
+            <el-col :span="4">
+              <FormField name="ship_name" label="收货人：" class="f-inline-row">
+                <TextBox v-model="model.ship_name" name="ship_name"/>
+              </FormField>
+            </el-col>
+            <el-col :span="4">
+              <FormField name="ship_phone" label="收货电话：" class="f-inline-row">
+                <TextBox v-model="model.ship_phone" name="ship_phone"/>
+              </FormField>
+            </el-col>
+            <el-col :span="12">
+              <FormField name="ship_address" label="收货地址：" class="f-inline-row">
+                <el-select v-model="provincev" placeholder="请选择">
+                  <el-option
+                    v-for="item in province"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+                <el-select v-model="cityv" placeholder="请选择">
+                  <el-option
+                    v-for="item in city"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+                <el-select v-model="areav" placeholder="请选择">
+                  <el-option
+                    v-for="item in area"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
 
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>长期服务信息</span>
-      </div>
-      <div class="text item">
-        <el-row :gutter="20">
-          <el-col :span="6">服务地址</el-col>
-          <el-col :span="6">服务时间</el-col>
-          <el-col :span="6">状态</el-col>
-          <el-col :span="6">操作</el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="6">{{model.ship_address}}</el-col>
-          <el-col :span="6">{{model.ext.appointment}}</el-col>
-          <el-col :span="6">{{model.ext.status}}</el-col>
-          <el-col :span="6"></el-col>
-        </el-row>
-      </div>
-    </el-card>
+                <TextBox v-model="model.ship_address" name="ship_address"/>
+              </FormField>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">买家备注：{{model.memo}}</el-col>
+          </el-row>
+        </div>
+      </el-card>
 
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>商品信息</span>
-      </div>
-      <div class="text item">
-        <el-table :data="model.items">
-          <el-table-column prop="pn" label="单品编码"></el-table-column>
-          <el-table-column prop="name" label="商品名称"></el-table-column>
-          <el-table-column prop="price" label="商品单价"></el-table-column>
-          <el-table-column prop="num" label="购买数量"></el-table-column>
-          <el-table-column prop="amount" label="商品总价"></el-table-column>
-          <el-table-column prop="weight" label="总重量"></el-table-column>
-          <el-table-column prop="volume" label="总体积"></el-table-column>
-          <el-table-column prop="delivery_num" label="发货数量"></el-table-column>
-        </el-table>
-      </div>
-    </el-card>
+      <el-card class="box-card" v-if="model.ext">
+        <div slot="header" class="clearfix">
+          <span>长期服务信息</span>
+        </div>
+        <div class="text item">
+          <el-row :gutter="20">
+            <el-col :span="6">服务地址</el-col>
+            <el-col :span="6">服务时间</el-col>
+            <el-col :span="6">服务状态</el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="6">{{model.ship_address}}</el-col>
+            <el-col :span="6">
+              <el-date-picker style="width: 90%" placeholder="选择日期" v-model="model.ext.appointment" type="date" value-format="timestamp" />
+            </el-col>
+            <el-col v-if="model.ext.status==1" :span="6">已服务</el-col>
+            <el-col v-if="!model.ext.status==1" :span="6">未服务</el-col>
+          </el-row>
+        </div>
+      </el-card>
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>商品信息</span>
+        </div>
+        <div class="text item">
+          <el-table :data="model.items">
+            <el-table-column prop="pn" label="单品编码"></el-table-column>
+            <el-table-column prop="name" label="商品名称"></el-table-column>
+            <el-table-column prop="price" label="商品单价"></el-table-column>
+            <el-table-column prop="num" label="购买数量"></el-table-column>
+            <el-table-column prop="amount" label="商品总价"></el-table-column>
+            <el-table-column prop="weight" label="总重量"></el-table-column>
+            <el-table-column prop="volume" label="总体积"></el-table-column>
+            <el-table-column prop="delivery_num" label="发货数量"></el-table-column>
+          </el-table>
+        </div>
+      </el-card>
+
+      <FormField>
+        <LinkButton style="margin-right: 20px" @click="verificationRow()">{{ $t('common.save') }}</LinkButton>
+        <LinkButton @click="cancel()">{{ $t('common.goBack') }}</LinkButton>
+      </FormField>
     <!-- <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>支付单/退款单</span>
@@ -200,42 +254,13 @@
         </el-table>
       </div>
     </el-card> -->
-    <!-- f-inline-row -->
-    <!-- <Form ref="form" :model="model" :rules="rules" style="padding:20px 20px" @validate="errors=$event">
-      <FormField name="id" label="订单号:" class="f-full">
-        <TextBox v-model="model.id" :disabled="true" />
-      </FormField>
-      <FormField name="reprint_info" label="转载说明:">
-        <TextBox v-model="model.reprint_info" />
-      </FormField>
-      <FormField name="cat_id" label="订单分类:">
-        <el-cascader v-model="model.cat_id" :options="treeData" clearable :props="{value:'id', label:'name', expandTrigger: 'hover'}"></el-cascader>
-      </FormField>
-      <FormField name="is_recommend" label="推荐:" class="f-inline-row">
-        <ComboBox v-model="model.is_recommend" :data="status" />
-      </FormField>
-      <FormField name="is_comment" label="允许评论:" class="f-inline-row">
-        <ComboBox v-model="model.is_comment" :data="status" />
-      </FormField>
-      <FormField name="is_top" label="置顶:" class="f-inline-row">
-        <ComboBox v-model="model.is_top" :data="status" />
-      </FormField>
-      <FormField name="release_at" label="发布时间:" class="f-inline-row">
-        <el-date-picker v-model="model.release_at" type="datetime" value-format="timestamp" placeholder="选择日期时间">
-        </el-date-picker>
-      </FormField>
-      <FormField name="keywords" label="关键词:" class="f-inline-row">
-        <TextBox v-model="model.keywords" input-id="keywords" :multiline="true" name="keywords" placeholder="多个请换行" style="height:80px" />
-      </FormField>
-      <FormField>
-        <LinkButton style="margin-right: 20px" @click="verificationRow()">{{ $t("common.save") }}</LinkButton>
-        <LinkButton @click="cancel()">{{ $t("common.goBack") }}</LinkButton>
-      </FormField>
-    </Form> -->
+    </Form>
+    
   </div>
 </template>
 <script>
 import * as apiOrder from '@/api/shop/order'
+import * as apiRegion from '@/api/base/region'
 
 export default {
   data() {
@@ -256,7 +281,14 @@ export default {
       errors: {},
       loading: false,
       treeData: [],
-      cmtResetHandle: 1
+      cmtResetHandle: 1,
+
+      provincev:null,
+      cityv:null,
+      areav:null,
+      province:[],
+      city:[],
+      area:[],
     };
   },
   created() {
@@ -266,8 +298,17 @@ export default {
     }
   },
   watch: {
-    "model": function() {
-      ++this.cmtResetHandle
+    "provincev": function () {
+      this.getArea(this.provincev,1)
+      this.area = [];
+      this.cityv = null;
+      this.areav = null;
+    },
+    "cityv": function () {
+      if (this.cityv) {
+        this.area = this.getArea(this.cityv,2)
+      }
+      this.areav = null;
     }
   },
   methods: {
@@ -348,45 +389,63 @@ export default {
           "area": null,
           "town": null,
           "parent_id": null
-        }]
+        }],
+        "ext": {
+          "appointment": '',
+          "status":null
+        },
+        "area_id": null
       }
     },
     cancel() {
       this.$store.dispatch("tagsView/delView", this.$route).then(({ visitedViews }) => {
-        this.$router.push({ path: "/cms/article/index" })
+        this.$router.push({ path: "/shop/order/index" })
       })
-    },
-    emitImageUpload(fileId) {
-      this.model.image_id = fileId
     },
     verificationRow() {
-      this.$refs.form.validate(errors => {
-        // console.log(this.model);return;
-        if (!errors) {
-          this.saveData(this.model);
-        }
-      })
+      this.saveData(this.model);
     },
     async viewData(id) {
       let res = await apiOrder.view({ id: id });
       this.model = Object.assign({}, res.data)
-      this.editModel = res.data
-      this.model.parent_id = this.funs.treeDeepArr(this.model.parent_id, this.treeData)
+      res = await apiRegion.getList({ id: 0 });
+      let p = this.model.userShipArea[0];
+      let c = this.model.userShipArea[1];
+      let a = this.model.userShipArea[2];
+      this.provincev = p.id;
+      this.province = res.data;
+
+      if (p.id) {
+        res = await apiRegion.getList({ id: p.id })
+        this.cityv = c.id;
+        this.city = res.data
+      }
+      if (c.id) {
+        res = await apiRegion.getList({ id: c.id })
+        this.areav = a.id;
+        this.area = res.data
+      }
     },
     async saveData(data) {
-      data.cat_id = data.cat_id[data.cat_id.length - 1]
-      if (this.editModel) {
-        await apiOrder.update(data);
-      } else {
-        await apiOrder.add(data);
-      }
+      data.ship_area_id = this.areav ? this.areav : (this.cityv ? this.cityv : this.provincev)
+      await apiOrder.update(data);
 
       this.$notify({
         type: "success",
         title: "操作成功"
       });
       this.cancel()
-    }
+    },
+    async getArea(id, level) {
+        let res = await apiRegion.getList({id:id});
+        if (level == 1) {
+          this.city = res.data
+        }
+        if (level == 2) {
+          this.area = res.data
+        }
+    },
+
   }
 };
 
