@@ -412,8 +412,8 @@ export default {
       let p = this.model.userShipArea[0];
       let c = this.model.userShipArea[1];
       let a = this.model.userShipArea[2];
-      this.provincev = p.id;
       this.province = res.data;
+      this.provincev = p.id;
 
       if (p.id) {
         res = await apiRegion.getList({ id: p.id })
