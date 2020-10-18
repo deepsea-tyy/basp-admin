@@ -35,7 +35,6 @@ export default {
   components: { FileUpload },
   data() {
     return {
-      test: "9",
       model: {},
       rules: {
         name: 'required'

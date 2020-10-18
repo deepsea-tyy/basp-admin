@@ -47,16 +47,28 @@ service.interceptors.response.use(
 
     // if the custom status is not 20000, it is judged as an error.
     if (res.status !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
+      if (res.status == 400) {
+        let message = ""
+        if ( typeof res.message == "object") {
+          let n = 0
+          for(var key in res.message){
+            if (n==0) {
+              message = res.message[key];
+              message = message.pop();
+             }
+          }
+        }
+        Message({
+          message: message || 'Error',
+          type: 'error',
+          duration: 3 * 1000
+        })
+      }
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.data === 50001 || res.data === 50012 || res.data === 50014) {
         // to re-login
-        MessageBox.confirm('您已退出登录，您可以取消以停留在此页，或重新登录', {
+        MessageBox.confirm('登录过期，请重新登录', {
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
